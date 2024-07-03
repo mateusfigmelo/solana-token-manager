@@ -19,7 +19,7 @@ default = []
 [dependencies]
 anchor-lang = { version = "0.28.0", features = ["init-if-needed"] }
 anchor-spl = "0.28.0"
-spl-associated-token-account = "1.1.2"
+spl-associated-token-account = "1.1.3"
 spl-token = { version = "3.3.0", features = ["no-entrypoint"] }
 mpl-token-metadata = "3.0.1"
 mpl-utils = "0.3.1"
