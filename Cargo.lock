@@ -2289,7 +2289,7 @@ dependencies = [
 name = "solana-nft-programs-paid-claim-approver"
 version = "4.6.0"
 dependencies = [
- "anchor-lang 0.28.0",
+ "anchor-lang 0.29.0",
  "anchor-spl 0.29.0",
  "proptest",
  "solana-nft-programs-payment-manager",
@@ -2318,7 +2318,7 @@ dependencies = [
 name = "solana-nft-programs-time-invalidator"
 version = "1.0.0"
 dependencies = [
- "anchor-lang 0.28.0",
+ "anchor-lang 0.29.0",
  "anchor-spl 0.29.0",
  "proptest",
  "solana-nft-programs-payment-manager",
@@ -2332,7 +2332,7 @@ dependencies = [
 name = "solana-nft-programs-token-manager"
 version = "1.0.0"
 dependencies = [
- "anchor-lang 0.28.0",
+ "anchor-lang 0.29.0",
  "anchor-spl 0.29.0",
  "mpl-token-metadata 4.1.2",
  "mpl-utils",
@@ -2347,7 +2347,7 @@ dependencies = [
 name = "solana-nft-programs-transfer-authority"
 version = "1.0.0"
 dependencies = [
- "anchor-lang 0.28.0",
+ "anchor-lang 0.29.0",
  "anchor-spl 0.29.0",
  "mpl-token-metadata 4.1.2",
  "mpl-utils",
@@ -2363,7 +2363,7 @@ dependencies = [
 name = "solana-nft-programs-use-invalidator"
 version = "1.0.0"
 dependencies = [
- "anchor-lang 0.28.0",
+ "anchor-lang 0.29.0",
  "anchor-spl 0.29.0",
  "arrayref",
  "mpl-token-metadata 4.1.2",
