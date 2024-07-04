@@ -2294,7 +2294,7 @@ dependencies = [
  "proptest",
  "solana-nft-programs-payment-manager",
  "solana-nft-programs-token-manager",
- "solana-program 1.16.25",
+ "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
  "spl-token 3.5.0",
 ]
@@ -2323,7 +2323,7 @@ dependencies = [
  "proptest",
  "solana-nft-programs-payment-manager",
  "solana-nft-programs-token-manager",
- "solana-program 1.16.25",
+ "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
  "spl-token 3.5.0",
 ]
@@ -2338,7 +2338,7 @@ dependencies = [
  "mpl-utils",
  "proptest",
  "solana-nft-programs-creator-standard",
- "solana-program 1.16.25",
+ "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
  "spl-token 3.5.0",
 ]
@@ -2354,7 +2354,7 @@ dependencies = [
  "proptest",
  "solana-nft-programs-payment-manager",
  "solana-nft-programs-token-manager",
- "solana-program 1.16.25",
+ "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
  "spl-token 3.5.0",
 ]
@@ -2371,7 +2371,7 @@ dependencies = [
  "proptest",
  "solana-nft-programs-payment-manager",
  "solana-nft-programs-token-manager",
- "solana-program 1.16.25",
+ "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
  "spl-token 3.5.0",
 ]
