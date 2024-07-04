@@ -2296,7 +2296,7 @@ dependencies = [
  "solana-nft-programs-token-manager",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 3.5.0",
+ "spl-token 4.0.1",
 ]
 
 [[package]]
@@ -2325,7 +2325,7 @@ dependencies = [
  "solana-nft-programs-token-manager",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 3.5.0",
+ "spl-token 4.0.1",
 ]
 
 [[package]]
@@ -2340,7 +2340,7 @@ dependencies = [
  "solana-nft-programs-creator-standard",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 3.5.0",
+ "spl-token 4.0.1",
 ]
 
 [[package]]
@@ -2356,7 +2356,7 @@ dependencies = [
  "solana-nft-programs-token-manager",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 3.5.0",
+ "spl-token 4.0.1",
 ]
 
 [[package]]
@@ -2373,7 +2373,7 @@ dependencies = [
  "solana-nft-programs-token-manager",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 3.5.0",
+ "spl-token 4.0.1",
 ]
 
 [[package]]
