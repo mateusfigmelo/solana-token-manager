@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Release SDK on NPM
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Release crate on crates.io
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Rust nightly
         uses: actions-rs/toolchain@v1
         with:
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Release verifiable binaries
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/install-linux-build-deps
       - uses: actions-rs/toolchain@v1
         with:
@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
