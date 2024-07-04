@@ -2296,7 +2296,7 @@ dependencies = [
  "solana-nft-programs-token-manager",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 4.0.1",
+ "spl-token 6.0.0",
 ]
 
 [[package]]
@@ -2325,7 +2325,7 @@ dependencies = [
  "solana-nft-programs-token-manager",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 4.0.1",
+ "spl-token 6.0.0",
 ]
 
 [[package]]
@@ -2340,7 +2340,7 @@ dependencies = [
  "solana-nft-programs-creator-standard",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 4.0.1",
+ "spl-token 6.0.0",
 ]
 
 [[package]]
@@ -2356,7 +2356,7 @@ dependencies = [
  "solana-nft-programs-token-manager",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 4.0.1",
+ "spl-token 6.0.0",
 ]
 
 [[package]]
@@ -2373,7 +2373,7 @@ dependencies = [
  "solana-nft-programs-token-manager",
  "solana-program 2.0.1",
  "spl-associated-token-account 2.2.0",
- "spl-token 4.0.1",
+ "spl-token 6.0.0",
 ]
 
 [[package]]
@@ -2748,6 +2748,21 @@ name = "spl-token"
 version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "95ae123223633a389f95d1da9d49c2d0a50d499e7060b9624626a69e536ad2a4"
+dependencies = [
+ "arrayref",
+ "bytemuck",
+ "num-derive 0.4.2",
+ "num-traits",
+ "num_enum 0.7.2",
+ "solana-program 2.0.1",
+ "thiserror",
+]
+
+[[package]]
+name = "spl-token"
+version = "6.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "70a0f06ac7f23dc0984931b1fe309468f14ea58e32660439c1cef19456f5d0e3"
 dependencies = [
  "arrayref",
  "bytemuck",
