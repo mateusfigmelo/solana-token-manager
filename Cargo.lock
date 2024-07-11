@@ -2294,7 +2294,7 @@ dependencies = [
  "proptest",
  "solana-nft-programs-payment-manager",
  "solana-nft-programs-token-manager",
- "solana-program 2.0.1",
+ "solana-program 2.0.2",
  "spl-associated-token-account 2.2.0",
  "spl-token 6.0.0",
 ]
@@ -2323,7 +2323,7 @@ dependencies = [
  "proptest",
  "solana-nft-programs-payment-manager",
  "solana-nft-programs-token-manager",
- "solana-program 2.0.1",
+ "solana-program 2.0.2",
  "spl-associated-token-account 2.2.0",
  "spl-token 6.0.0",
 ]
@@ -2338,7 +2338,7 @@ dependencies = [
  "mpl-utils",
  "proptest",
  "solana-nft-programs-creator-standard",
- "solana-program 2.0.1",
+ "solana-program 2.0.2",
  "spl-associated-token-account 2.2.0",
  "spl-token 6.0.0",
 ]
@@ -2354,7 +2354,7 @@ dependencies = [
  "proptest",
  "solana-nft-programs-payment-manager",
  "solana-nft-programs-token-manager",
- "solana-program 2.0.1",
+ "solana-program 2.0.2",
  "spl-associated-token-account 2.2.0",
  "spl-token 6.0.0",
 ]
@@ -2371,7 +2371,7 @@ dependencies = [
  "proptest",
  "solana-nft-programs-payment-manager",
  "solana-nft-programs-token-manager",
- "solana-program 2.0.1",
+ "solana-program 2.0.2",
  "spl-associated-token-account 2.2.0",
  "spl-token 6.0.0",
 ]
@@ -2433,9 +2433,9 @@ dependencies = [
 
 [[package]]
 name = "solana-program"
-version = "2.0.1"
+version = "2.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9164e89e655a4689de62f0c8066f4a9496e16e5d38ca27c821fc812bac79fa34"
+checksum = "46779502637be111d121691aace200175ec1a57643f9760a36450b52d4eccdfd"
 dependencies = [
  "ark-bn254",
  "ark-ec",
@@ -2472,7 +2472,7 @@ dependencies = [
  "serde_derive",
  "sha2 0.10.8",
  "sha3 0.10.8",
- "solana-sdk-macro 2.0.1",
+ "solana-sdk-macro 2.0.2",
  "thiserror",
  "wasm-bindgen",
 ]
@@ -2545,9 +2545,9 @@ dependencies = [
 
 [[package]]
 name = "solana-sdk-macro"
-version = "2.0.1"
+version = "2.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b34e8a090f0572191388412636f7682370ad944894dd2d20a8e616159fd8e1b6"
+checksum = "fa59130529bdfa2df945762785ea6c887cc07c901f52eb67ea4dfaa9e0b9c60b"
 dependencies = [
  "bs58 0.5.1",
  "proc-macro2",
@@ -2673,7 +2673,7 @@ version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "58e9bae02de3405079a057fe244c867a08f92d48327d231fc60da831f94caf0a"
 dependencies = [
- "solana-program 2.0.1",
+ "solana-program 2.0.2",
 ]
 
 [[package]]
@@ -2754,7 +2754,7 @@ dependencies = [
  "num-derive 0.4.2",
  "num-traits",
  "num_enum 0.7.2",
- "solana-program 2.0.1",
+ "solana-program 2.0.2",
  "thiserror",
 ]
 
@@ -2769,7 +2769,7 @@ dependencies = [
  "num-derive 0.4.2",
  "num-traits",
  "num_enum 0.7.2",
- "solana-program 2.0.1",
+ "solana-program 2.0.2",
  "thiserror",
 ]
 
