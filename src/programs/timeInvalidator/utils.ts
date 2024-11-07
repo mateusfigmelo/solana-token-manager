@@ -1,6 +1,6 @@
-import { BN } from "@project-serum/anchor";
+import { BN } from "@coral-xyz/anchor";
+import type { AccountData } from "@solana-nft-programs/common";
 
-import type { AccountData } from "../..";
 import type { TokenManagerData } from "../tokenManager";
 import { TokenManagerState } from "../tokenManager";
 import type { TimeInvalidatorData } from ".";

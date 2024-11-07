@@ -1,16 +1,13 @@
-import {
-  Creator,
-  DataV2,
-  Metadata,
-  UpdateMetadataV2,
-} from "@metaplex-foundation/mpl-token-metadata";
-import { utils } from "@project-serum/anchor";
-import { PublicKey } from "@solana/web3.js";
+import { utils } from "@coral-xyz/anchor";
+import { createUpdateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata";
 import {
   Keypair,
+  PublicKey,
   sendAndConfirmRawTransaction,
   Transaction,
 } from "@solana/web3.js";
+import { findMintMetadataId } from "@solana-nft-programs/common";
+
 import { connectionFor } from "./connection";
 
 const wallet = Keypair.fromSecretKey(
@@ -51,34 +48,40 @@ const updateMetadata = async (
     try {
       const mintId = mintIds[i]!;
       console.log(
-        `https://nft.cardinal.so/metadata/${mintId.toString()}?uri=${metadataUrl}&text=header:${dayName}%20${floor}F%20S${counter}&attrs=Day:${dayName};Floor:${floor};Seat:${counter}`
+        `https://nft.host.so/metadata/${mintId.toString()}?uri=${metadataUrl}&text=header:${dayName}%20${floor}F%20S${counter}&attrs=Day:${dayName};Floor:${floor};Seat:${counter}`
       );
-      const metadataId = await Metadata.getPDA(mintId);
-      const metadataTx = new UpdateMetadataV2(
-        { feePayer: wallet.publicKey },
+      const metadataId = findMintMetadataId(mintId);
+      const metadataIx = createUpdateMetadataAccountV2Instruction(
         {
           metadata: metadataId,
-          metadataData: new DataV2({
-            name: `EmpireDAO #${floor}.${counter} (${daySymbol})`,
-            symbol: daySymbol,
-            uri: `https://nft.cardinal.so/metadata/${mintId.toString()}?uri=${metadataUrl}&text=header:${dayName}%20${floor}F%20S${counter}&attrs=Day:${dayName};Floor:${floor};Seat:${counter}`,
-            sellerFeeBasisPoints: 10,
-            creators: [
-              new Creator({
-                address: wallet.publicKey.toString(),
-                verified: true,
-                share: 100,
-              }),
-            ],
-            collection: null,
-            uses: null,
-          }),
           updateAuthority: wallet.publicKey,
+        },
+        {
+          updateMetadataAccountArgsV2: {
+            data: {
+              name: `EmpireDAO #${floor}.${counter} (${daySymbol})`,
+              symbol: daySymbol,
+              uri: `https://nft.host.so/metadata/${mintId.toString()}?uri=${metadataUrl}&text=header:${dayName}%20${floor}F%20S${counter}&attrs=Day:${dayName};Floor:${floor};Seat:${counter}`,
+              sellerFeeBasisPoints: 10,
+              creators: [
+                {
+                  address: wallet.publicKey,
+                  verified: true,
+                  share: 100,
+                },
+              ],
+              collection: null,
+              uses: null,
+            },
+            primarySaleHappened: false,
+            isMutable: true,
+            updateAuthority: wallet.publicKey,
+          },
         }
       );
 
       const transaction = new Transaction();
-      transaction.instructions = [...metadataTx.instructions];
+      transaction.instructions = [metadataIx];
       transaction.feePayer = wallet.publicKey;
       transaction.recentBlockhash = (
         await connection.getRecentBlockhash("max")
@@ -101,7 +104,7 @@ const updateMetadata = async (
 
 updateMetadata(
   MINTS_IDS,
-  "https://rent.cardinal.so/metadata/empiredao.json",
+  "https://rent.host.so/metadata/empiredao.json",
   DAY,
   "mainnet",
   FLOOR

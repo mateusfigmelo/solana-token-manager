@@ -1,11 +1,11 @@
-import * as anchor from "@project-serum/anchor";
+import { utils, Wallet } from "@coral-xyz/anchor";
+import type { PublicKey } from "@solana/web3.js";
+import { Keypair, Transaction } from "@solana/web3.js";
+import { executeTransaction, tryGetAccount } from "@solana-nft-programs/common";
 
-import { tryGetAccount, withInitMarketplace } from "../src";
-import { connectionFor } from "./connection";
-import { SignerWallet } from "@saberhq/solana-contrib";
-import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import { withInitMarketplace } from "../src";
 import { getMarketplaceByName } from "../src/programs/transferAuthority/accounts";
-import { executeTransaction } from "./utils";
+import { connectionFor } from "./connection";
 
 export type MarketplaceParams = {
   name: string;
@@ -15,7 +15,7 @@ export type MarketplaceParams = {
 };
 
 const wallet = Keypair.fromSecretKey(
-  anchor.utils.bytes.bs58.decode(anchor.utils.bytes.bs58.encode([]))
+  utils.bytes.bs58.decode(utils.bytes.bs58.encode([]))
 ); // your wallet's secret key // your wallet's secret key
 
 const main = async (params: MarketplaceParams, cluster = "devnet") => {
@@ -25,19 +25,15 @@ const main = async (params: MarketplaceParams, cluster = "devnet") => {
   await withInitMarketplace(
     transaction,
     connection,
-    new SignerWallet(wallet),
+    new Wallet(wallet),
     params.name,
     params.paymentManagerName
   );
 
   try {
-    await executeTransaction(
-      connection,
-      new SignerWallet(wallet),
-      transaction,
-      {}
-    );
+    await executeTransaction(connection, transaction, new Wallet(wallet), {});
   } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     console.log(`Transactionn failed: ${e}`);
   }
 
@@ -52,8 +48,8 @@ const main = async (params: MarketplaceParams, cluster = "devnet") => {
 };
 
 const params: MarketplaceParams = {
-  name: "marketplace-cardinal",
+  name: "marketplace-temp",
   transferAuthorityName: "global",
-  paymentManagerName: "cardinal-marketplace",
+  paymentManagerName: "temp-marketplace",
 };
 main(params).catch((e) => console.log(e));

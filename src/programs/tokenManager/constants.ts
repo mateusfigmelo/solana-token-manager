@@ -1,7 +1,11 @@
-import type { AnchorTypes } from "@saberhq/anchor-contrib";
-import { PublicKey } from "@solana/web3.js";
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
+import type { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
+import type { ConfirmOptions, Connection } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
+import type { ParsedIdlAccountData } from "@solana-nft-programs/common";
+import { emptyWallet } from "@solana-nft-programs/common";
 
-import * as TOKEN_MANAGER_TYPES from "../../idl/cardinal_token_manager";
+import * as TOKEN_MANAGER_TYPES from "../../idl/solana_nft_programs_token_manager";
 
 export const TOKEN_MANAGER_ADDRESS = new PublicKey(
   "mgr99QFMYByTqGPWmNqunV7vBLmWWXdSrHUfV8Jf3JM"
@@ -21,31 +25,35 @@ export const RECEIPT_MINT_MANAGER_SEED = "receipt-mint-manager";
 
 export const TOKEN_MANAGER_IDL = TOKEN_MANAGER_TYPES.IDL;
 
-export type TOKEN_MANAGER_PROGRAM = TOKEN_MANAGER_TYPES.CardinalTokenManager;
+export type TOKEN_MANAGER_PROGRAM =
+  TOKEN_MANAGER_TYPES.SolanaNftProgramsTokenManager;
 
-export type TokenManagerTypes = AnchorTypes<
-  TOKEN_MANAGER_PROGRAM,
-  {
-    tokenManager: TokenManagerData;
-  }
+export type TokenManagerData = ParsedIdlAccountData<
+  "tokenManager",
+  TOKEN_MANAGER_PROGRAM
 >;
 
-export type TokenManagerError = TokenManagerTypes["Error"];
+export type MintManagerData = ParsedIdlAccountData<
+  "mintManager",
+  TOKEN_MANAGER_PROGRAM
+>;
 
-type Accounts = TokenManagerTypes["Accounts"];
-export type TokenManagerData = Accounts["tokenManager"];
+export type MintCounterData = ParsedIdlAccountData<
+  "mintCounter",
+  TOKEN_MANAGER_PROGRAM
+>;
 
-export type MintManagerData = Accounts["mintManager"];
-
-export type MintCounterData = Accounts["mintCounter"];
-
-export type TransferReceiptData = Accounts["transferReceipt"];
+export type TransferReceiptData = ParsedIdlAccountData<
+  "transferReceipt",
+  TOKEN_MANAGER_PROGRAM
+>;
 
 export enum TokenManagerKind {
   Managed = 1,
   Unmanaged = 2,
   Edition = 3,
   Permissioned = 4,
+  Programmable = 5,
 }
 
 export enum InvalidationType {
@@ -66,3 +74,19 @@ export enum TokenManagerState {
 export const CRANK_KEY = new PublicKey(
   "crkdpVWjHWdggGgBuSyAqSmZUmAjYLzD435tcLDRLXr"
 );
+
+export const tokenManagerProgram = (
+  connection: Connection,
+  wallet?: Wallet,
+  confirmOptions?: ConfirmOptions
+) => {
+  return new Program<TOKEN_MANAGER_PROGRAM>(
+    TOKEN_MANAGER_IDL,
+    TOKEN_MANAGER_ADDRESS,
+    new AnchorProvider(
+      connection,
+      wallet ?? emptyWallet(Keypair.generate().publicKey),
+      confirmOptions ?? {}
+    )
+  );
+};
