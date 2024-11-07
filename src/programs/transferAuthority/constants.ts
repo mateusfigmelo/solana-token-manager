@@ -1,7 +1,11 @@
-import type { AnchorTypes } from "@saberhq/anchor-contrib";
-import { PublicKey } from "@solana/web3.js";
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
+import type { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
+import type { ConfirmOptions, Connection } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
+import type { ParsedIdlAccountData } from "@solana-nft-programs/common";
+import { emptyWallet } from "@solana-nft-programs/common";
 
-import * as TRANSFER_AUTHORITY_TYPES from "../../idl/cardinal_transfer_authority";
+import * as TRANSFER_AUTHORITY_TYPES from "../../idl/solana_nft_programs_transfer_authority";
 
 export const TRANSFER_AUTHORITY_ADDRESS = new PublicKey(
   "trsMRg3GzFSNgC3tdhbuKUES8YvGtUBbzp5fjxLtVQW"
@@ -15,14 +19,7 @@ export const TRANSFER_SEED = "transfer";
 export const TRANSFER_AUTHORITY_IDL = TRANSFER_AUTHORITY_TYPES.IDL;
 
 export type TRANSFER_AUTHORITY_PROGRAM =
-  TRANSFER_AUTHORITY_TYPES.CardinalTransferAuthority;
-
-export type TransferAuthorityTypes = AnchorTypes<
-  TRANSFER_AUTHORITY_PROGRAM,
-  {
-    tokenManager: TransferAuthorityData;
-  }
->;
+  TRANSFER_AUTHORITY_TYPES.SolanaNftProgramsTransferAuthority;
 
 export const WSOL_MINT = new PublicKey(
   "So11111111111111111111111111111111111111112"
@@ -30,8 +27,35 @@ export const WSOL_MINT = new PublicKey(
 
 export const DEFAULT_TRANSFER_AUTHORITY_NAME = "global";
 
-type Accounts = TransferAuthorityTypes["Accounts"];
-export type TransferAuthorityData = Accounts["transferAuthority"];
-export type MarketplaceData = Accounts["marketplace"];
-export type ListingData = Accounts["listing"];
-export type TransferData = Accounts["transfer"];
+export type TransferAuthorityData = ParsedIdlAccountData<
+  "transferAuthority",
+  TRANSFER_AUTHORITY_PROGRAM
+>;
+export type MarketplaceData = ParsedIdlAccountData<
+  "marketplace",
+  TRANSFER_AUTHORITY_PROGRAM
+>;
+export type ListingData = ParsedIdlAccountData<
+  "listing",
+  TRANSFER_AUTHORITY_PROGRAM
+>;
+export type TransferData = ParsedIdlAccountData<
+  "transfer",
+  TRANSFER_AUTHORITY_PROGRAM
+>;
+
+export const transferAuthorityProgram = (
+  connection: Connection,
+  wallet?: Wallet,
+  confirmOptions?: ConfirmOptions
+) => {
+  return new Program<TRANSFER_AUTHORITY_PROGRAM>(
+    TRANSFER_AUTHORITY_IDL,
+    TRANSFER_AUTHORITY_ADDRESS,
+    new AnchorProvider(
+      connection,
+      wallet ?? emptyWallet(Keypair.generate().publicKey),
+      confirmOptions ?? {}
+    )
+  );
+};

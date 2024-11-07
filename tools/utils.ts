@@ -1,141 +1,112 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import type { Wallet } from "@saberhq/solana-contrib";
-import * as splToken from "@solana/spl-token";
-import { Connection } from "@solana/web3.js";
-import * as web3 from "@solana/web3.js";
+import { utils } from "@coral-xyz/anchor";
+import type { Wallet as IWallet } from "@coral-xyz/anchor/dist/cjs/provider";
+import type { ConfirmOptions, Connection, Transaction } from "@solana/web3.js";
+import { Keypair, sendAndConfirmRawTransaction } from "@solana/web3.js";
+import { chunkArray, logError } from "@solana-nft-programs/common";
 
-import { withFindOrInitAssociatedTokenAccount } from "../src";
-
-export function chunkArray<T>(arr: T[], size: number): T[][] {
-  return arr.length > size
-    ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)]
-    : [arr];
-}
-
-/**
- * Pay and create mint and token account
- * @param connection
- * @param creator
- * @returns
- */
-export const createMint = async (
-  connection: web3.Connection,
-  creator: web3.Keypair,
-  recipient: web3.PublicKey,
-  amount = 1,
-  freezeAuthority: web3.PublicKey = recipient
-): Promise<[web3.PublicKey, splToken.Token]> => {
-  const mint = await splToken.Token.createMint(
-    connection,
-    creator,
-    creator.publicKey,
-    freezeAuthority,
-    0,
-    splToken.TOKEN_PROGRAM_ID
-  );
-  const tokenAccount = await mint.createAssociatedTokenAccount(recipient);
-  await mint.mintTo(tokenAccount, creator.publicKey, [], amount);
-  return [tokenAccount, mint];
-};
-
-/**
- * Pay and create mint and token account
- * @param connection
- * @param creator
- * @returns
- */
-export const createMintTransaction = async (
-  transaction: web3.Transaction,
-  connection: web3.Connection,
-  wallet: Wallet,
-  recipient: web3.PublicKey,
-  mintId: web3.PublicKey,
-  amount = 1,
-  freezeAuthority: web3.PublicKey = recipient,
-  receiver = wallet.publicKey
-): Promise<[web3.PublicKey, web3.Transaction]> => {
-  const mintBalanceNeeded = await splToken.Token.getMinBalanceRentForExemptMint(
-    connection
-  );
-  transaction.add(
-    web3.SystemProgram.createAccount({
-      fromPubkey: wallet.publicKey,
-      newAccountPubkey: mintId,
-      lamports: mintBalanceNeeded,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      space: splToken.MintLayout.span,
-      programId: splToken.TOKEN_PROGRAM_ID,
-    })
-  );
-  transaction.add(
-    splToken.Token.createInitMintInstruction(
-      splToken.TOKEN_PROGRAM_ID,
-      mintId,
-      0,
-      wallet.publicKey,
-      freezeAuthority
-    )
-  );
-  const receiverAta = await withFindOrInitAssociatedTokenAccount(
-    transaction,
-    connection,
-    mintId,
-    receiver,
-    wallet.publicKey,
-    true
-  );
-  if (amount > 0) {
-    transaction.add(
-      splToken.Token.createMintToInstruction(
-        splToken.TOKEN_PROGRAM_ID,
-        mintId,
-        receiverAta,
-        wallet.publicKey,
-        [],
-        amount
-      )
-    );
-  }
-  return [receiverAta, transaction];
-};
-
-export const executeTransaction = async (
-  connection: Connection,
-  wallet: Wallet,
-  transaction: web3.Transaction,
-  config: {
-    silent?: boolean;
-    signers?: web3.Signer[];
-    confirmOptions?: web3.ConfirmOptions;
-    callback?: (success: boolean) => void;
-  }
-): Promise<string> => {
-  let txid = "";
+export const keypairFrom = (s: string, n?: string): Keypair => {
   try {
-    transaction.feePayer = wallet.publicKey;
-    transaction.recentBlockhash = (
-      await connection.getRecentBlockhash("max")
-    ).blockhash;
-    await wallet.signTransaction(transaction);
-    if (config.signers && config.signers.length > 0) {
-      transaction.partialSign(...config.signers);
+    if (s.includes("[")) {
+      return Keypair.fromSecretKey(
+        Buffer.from(
+          s
+            .replace("[", "")
+            .replace("]", "")
+            .split(",")
+            .map((c) => parseInt(c))
+        )
+      );
+    } else {
+      return Keypair.fromSecretKey(utils.bytes.bs58.decode(s));
     }
-    txid = await web3.sendAndConfirmRawTransaction(
-      connection,
-      transaction.serialize(),
-      config.confirmOptions
-    );
-    config.callback && config.callback(true);
-  } catch (e: unknown) {
-    console.log(
-      "Failed transaction: ",
-      (e as web3.SendTransactionError).logs,
-      e
-    );
-    config.callback && config.callback(false);
-    if (!config.silent) {
-      throw e;
+  } catch (e) {
+    try {
+      return Keypair.fromSecretKey(
+        Buffer.from(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          JSON.parse(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
+            require("fs").readFileSync(s, {
+              encoding: "utf-8",
+            })
+          )
+        )
+      );
+    } catch (e) {
+      process.stdout.write(`${n ?? "keypair"} is not valid keypair`);
+      process.exit(1);
     }
   }
-  return txid;
 };
+
+export async function executeTransactionBatches<T = null>(
+  connection: Connection,
+  txs: Transaction[],
+  wallet: IWallet,
+  config?: {
+    signers?: Keypair[][];
+    batchSize?: number;
+    successHandler?: (
+      txid: string,
+      ix: { i: number; j: number; it: number; jt: number }
+    ) => void;
+    errorHandler?: (
+      e: unknown,
+      ix: { i: number; j: number; it: number; jt: number }
+    ) => T;
+    confirmOptions?: ConfirmOptions;
+  }
+): Promise<(string | null | T)[]> {
+  const batchLength = config?.batchSize ?? txs.length;
+  const batchedTxs = chunkArray(txs, batchLength);
+  const txids: (string | T | null)[] = [];
+  for (let i = 0; i < batchedTxs.length; i++) {
+    const batch = batchedTxs[i];
+    if (batch) {
+      const latestBlockhash = (await connection.getLatestBlockhash()).blockhash;
+      const batchSignedTxs = await wallet.signAllTransactions(
+        batch.map((tx, j) => {
+          tx.recentBlockhash = latestBlockhash;
+          tx.feePayer = wallet.publicKey;
+          if (config?.signers?.at(i * batchLength + j)) {
+            tx.partialSign(...(config?.signers.at(i * batchLength + j) ?? []));
+          }
+          return tx;
+        })
+      );
+      const batchTxids = await Promise.all(
+        batchSignedTxs.map(async (tx, j) => {
+          try {
+            const txid = await sendAndConfirmRawTransaction(
+              connection,
+              tx.serialize(),
+              config?.confirmOptions
+            );
+            if (config?.successHandler) {
+              config?.successHandler(txid, {
+                i,
+                it: batchedTxs.length,
+                j,
+                jt: batchSignedTxs.length,
+              });
+            }
+            return txid;
+          } catch (e) {
+            if (config?.errorHandler) {
+              return config?.errorHandler(e, {
+                i,
+                it: batchedTxs.length,
+                j,
+                jt: batchSignedTxs.length,
+              });
+            }
+            logError(e);
+            return null;
+          }
+        })
+      );
+      txids.push(...batchTxids);
+    }
+  }
+  return txids;
+}

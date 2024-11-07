@@ -1,38 +1,21 @@
-import {
-  AnchorProvider,
-  BN,
-  BorshAccountsCoder,
-  Program,
-} from "@project-serum/anchor";
-import { SignerWallet } from "@saberhq/solana-contrib";
+import { BN, BorshAccountsCoder } from "@coral-xyz/anchor";
 import type { Connection, PublicKey } from "@solana/web3.js";
-import { Keypair } from "@solana/web3.js";
+import type { AccountData } from "@solana-nft-programs/common";
 
-import type { AccountData } from "../../utils";
-import type {
-  TIME_INVALIDATOR_PROGRAM,
-  TimeInvalidatorData,
+import type { TimeInvalidatorData } from "./constants";
+import {
+  TIME_INVALIDATOR_ADDRESS,
+  TIME_INVALIDATOR_IDL,
+  timeInvalidatorProgram,
 } from "./constants";
-import { TIME_INVALIDATOR_ADDRESS, TIME_INVALIDATOR_IDL } from "./constants";
 
 export const getTimeInvalidator = async (
   connection: Connection,
   timeInvalidatorId: PublicKey
 ): Promise<AccountData<TimeInvalidatorData>> => {
-  const provider = new AnchorProvider(
-    connection,
-    new SignerWallet(Keypair.generate()),
-    {}
-  );
-  const timeInvalidatorProgram = new Program<TIME_INVALIDATOR_PROGRAM>(
-    TIME_INVALIDATOR_IDL,
-    TIME_INVALIDATOR_ADDRESS,
-    provider
-  );
+  const program = timeInvalidatorProgram(connection);
 
-  const parsed = await timeInvalidatorProgram.account.timeInvalidator.fetch(
-    timeInvalidatorId
-  );
+  const parsed = await program.account.timeInvalidator.fetch(timeInvalidatorId);
   return {
     parsed,
     pubkey: timeInvalidatorId,
@@ -42,29 +25,19 @@ export const getTimeInvalidator = async (
 export const getTimeInvalidators = async (
   connection: Connection,
   timeInvalidatorIds: PublicKey[]
-): Promise<AccountData<TimeInvalidatorData>[]> => {
-  const provider = new AnchorProvider(
-    connection,
-    new SignerWallet(Keypair.generate()),
-    {}
-  );
-  const timeInvalidatorProgram = new Program<TIME_INVALIDATOR_PROGRAM>(
-    TIME_INVALIDATOR_IDL,
-    TIME_INVALIDATOR_ADDRESS,
-    provider
-  );
+): Promise<AccountData<TimeInvalidatorData | null>[]> => {
+  const program = timeInvalidatorProgram(connection);
 
   let timeInvalidators: (TimeInvalidatorData | null)[] = [];
   try {
-    timeInvalidators =
-      (await timeInvalidatorProgram.account.timeInvalidator.fetchMultiple(
-        timeInvalidatorIds
-      )) as (TimeInvalidatorData | null)[];
+    timeInvalidators = (await program.account.timeInvalidator.fetchMultiple(
+      timeInvalidatorIds
+    )) as (TimeInvalidatorData | null)[];
   } catch (e) {
     console.log(e);
   }
   return timeInvalidators.map((data, i) => ({
-    parsed: data!,
+    parsed: data,
     pubkey: timeInvalidatorIds[i]!,
   }));
 };

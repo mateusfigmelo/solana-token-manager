@@ -1,7 +1,8 @@
-import { tryGetAccount } from "../src";
-import { connectionFor } from "./connection";
-import { PublicKey } from "@solana/web3.js";
+import type { PublicKey } from "@solana/web3.js";
+import { tryGetAccount } from "@solana-nft-programs/common";
+
 import { getMarketplaceByName } from "../src/programs/transferAuthority/accounts";
+import { connectionFor } from "./connection";
 
 export type MarketplaceParams = {
   name: string;
@@ -24,4 +25,4 @@ const main = async (name: string, cluster = "mainnet") => {
   }
 };
 
-main("cardinal").catch((e) => console.log(e));
+main("temp").catch((e) => console.log(e));
