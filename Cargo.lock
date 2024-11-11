@@ -1505,14 +1505,14 @@ dependencies = [
 
 [[package]]
 name = "mpl-token-metadata"
-version = "4.1.2"
+version = "5.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "caf0f61b553e424a6234af1268456972ee66c2222e1da89079242251fa7479e5"
+checksum = "989e6a3000e761d3b2d685662a3a9ee99826f9369fb033bd1bc7011b1cf02ed9"
 dependencies = [
  "borsh 0.10.3",
  "num-derive 0.3.3",
  "num-traits",
- "solana-program 1.16.25",
+ "solana-program 2.0.11",
  "thiserror",
 ]
 
@@ -2334,7 +2334,7 @@ version = "1.0.0"
 dependencies = [
  "anchor-lang 0.29.0",
  "anchor-spl 0.29.0",
- "mpl-token-metadata 4.1.2",
+ "mpl-token-metadata 5.1.0",
  "mpl-utils",
  "proptest",
  "solana-nft-programs-creator-standard",
@@ -2349,7 +2349,7 @@ version = "1.0.0"
 dependencies = [
  "anchor-lang 0.29.0",
  "anchor-spl 0.29.0",
- "mpl-token-metadata 4.1.2",
+ "mpl-token-metadata 5.1.0",
  "mpl-utils",
  "proptest",
  "solana-nft-programs-payment-manager",
@@ -2366,7 +2366,7 @@ dependencies = [
  "anchor-lang 0.29.0",
  "anchor-spl 0.29.0",
  "arrayref",
- "mpl-token-metadata 4.1.2",
+ "mpl-token-metadata 5.1.0",
  "mpl-utils",
  "proptest",
  "solana-nft-programs-payment-manager",
