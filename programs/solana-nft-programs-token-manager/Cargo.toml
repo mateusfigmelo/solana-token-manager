@@ -27,4 +27,4 @@ mpl-utils = "0.3.6"
 solana-nft-programs-creator-standard = { version = "1.0.0", features = ["cpi"] }
 
 [dev-dependencies]
-proptest = { version = "1.5" }
+proptest = { version = "1.6" }
